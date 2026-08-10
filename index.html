@@ -1498,58 +1498,82 @@ crearPoligono(
     "ÁREA COMÚN"
 );
 
-/*
-===========================================================
+/* ===========================================================
 DIBUJAR PUNTOS DEL ÁREA COMÚN
-===========================================================
-*/
+=========================================================== */
+
+// 1. Opcional pero recomendado: Calcular el "centro" aproximado del polígono
+// para saber hacia dónde es "adentro" y empujar el texto hacia "afuera".
+let centroX = 0;
+let centroY = 0;
+let totalPuntos = areaComun.length - 1;
+
+for (let i = 0; i < totalPuntos; i++) {
+    const qCentro = convertirPunto(areaComun[i]);
+    centroX += qCentro.x;
+    centroY += qCentro.y;
+}
+centroX /= totalPuntos;
+centroY /= totalPuntos;
+
+const svg = document.getElementById("mapSVG");
 
 areaComun.forEach((p, index) => {
-
-    /*
-    No dibujamos el último porque es repetición del primero
-    */
-
+    /* No dibujamos el último porque es repetición del primero */
     if (index === areaComun.length - 1) return;
 
     const q = convertirPunto(p);
 
-    const svg = document.getElementById("mapSVG");
-
-    const circle = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "circle"
-    );
-
+    // --- DIBUJAR CIRCULO ---
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     circle.setAttribute("cx", q.x);
-
     circle.setAttribute("cy", q.y);
-
     circle.setAttribute("r", 6);
-
     circle.setAttribute("fill", "#000");
-
     svg.appendChild(circle);
 
-    const texto = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "text"
-    );
 
-    texto.setAttribute("x", q.x + 10);
+    // --- DIBUJAR TEXTO ---
+    const texto = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    
+    // 2. Calcular la dirección hacia afuera desde el centroide
+    const vectorX = q.x - centroX;
+    const vectorY = q.y - centroY;
+    const distancia = Math.sqrt(vectorX * vectorX + vectorY * vectorY) || 1; // Evitar división por cero
+    
+    // Distancia en píxeles que queremos separar el texto del punto
+    const separacion = 15; 
+    const offsetX = (vectorX / distancia) * separacion;
+    const offsetY = (vectorY / distancia) * separacion;
 
-    texto.setAttribute("y", q.y - 8);
+    texto.setAttribute("x", q.x + offsetX);
+    texto.setAttribute("y", q.y + offsetY);
 
+    // 3. Alinear el texto inteligentemente según de qué lado está
+    // Si está a la izquierda del punto, anclamos al final para que crezca hacia la izquierda.
+    if (offsetX < 0) {
+        texto.setAttribute("text-anchor", "end");
+    } else {
+        texto.setAttribute("text-anchor", "start");
+    }
+    // Centrarlo verticalmente respecto al nuevo punto Y
+    texto.setAttribute("alignment-baseline", "middle");
+
+    // 4. Estilos del texto
     texto.setAttribute("font-size", "13");
-
     texto.setAttribute("font-family", "Arial");
-
     texto.setAttribute("font-weight", "900");
+    
+    // 5. TRUCO DE LEGIBILIDAD: Halo blanco alrededor del texto (paint-order)
+    // Esto hace que el texto resalte incluso si toca una línea negra del polígono.
+    texto.setAttribute("fill", "#000");
+    texto.setAttribute("stroke", "#FFF");
+    texto.setAttribute("stroke-width", "3");
+    texto.setAttribute("stroke-linejoin", "round");
+    texto.setAttribute("paint-order", "stroke fill");
 
     texto.textContent = "AC-V" + (index + 1);
-
     svg.appendChild(texto);
-
 });
 
 /*
