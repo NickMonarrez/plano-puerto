@@ -1552,60 +1552,80 @@ crearPoligono(
 );
 
 
-/*
-===========================================================
-DIBUJAR PUNTOS DEL ÁREA COMÚN
-===========================================================
-*/
+<!-- ============================= -->
+<!-- ÁREA COMÚN - ETIQUETAS AJUSTADAS -->
+<!-- ============================= -->
 
-areaComun.forEach((p, index) => {
+<!-- Polígono del Área Común -->
+<polygon 
+    points="480,520 540,500 570,540 500,560"
+    fill="#fcf3cf"
+    fill-opacity="0.75"
+    stroke="#000000"
+    stroke-width="2.5"
+    stroke-dasharray="6 4"
+/>
 
-    /*
-    No dibujamos el último porque es repetición del primero
-    */
+<!-- Vértice AC-V1 -->
+<circle cx="480" cy="520" r="4" fill="#000000"/>
+<line x1="480" y1="520" x2="445" y2="500"
+      stroke="#000000" stroke-width="1.5"/>
+<text x="440" y="497"
+      font-size="11"
+      fill="#000000"
+      text-anchor="end">
+    AC-V1
+</text>
 
-    if (index === areaComun.length - 1) return;
+<!-- Vértice AC-V2 -->
+<circle cx="540" cy="500" r="4" fill="#000000"/>
+<line x1="540" y1="500" x2="575" y2="485"
+      stroke="#000000" stroke-width="1.5"/>
+<text x="580" y="482"
+      font-size="11"
+      fill="#000000"
+      text-anchor="start">
+    AC-V2
+</text>
 
-    const q = convertirPunto(p);
+<!-- Vértice AC-V3 -->
+<circle cx="570" cy="540" r="4" fill="#000000"/>
+<line x1="570" y1="540" x2="610" y2="545"
+      stroke="#000000" stroke-width="1.5"/>
+<text x="615" y="549"
+      font-size="11"
+      fill="#000000"
+      text-anchor="start">
+    AC-V3
+</text>
 
-    const svg = document.getElementById("mapSVG");
+<!-- Vértice AC-V4 -->
+<circle cx="500" cy="560" r="4" fill="#000000"/>
+<line x1="500" y1="560" x2="460" y2="585"
+      stroke="#000000" stroke-width="1.5"/>
+<text x="455" y="589"
+      font-size="11"
+      fill="#000000"
+      text-anchor="end">
+    AC-V4
+</text>
 
-    const circle = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "circle"
-    );
+<!-- Etiqueta principal del Área Común -->
+<rect x="495" y="515"
+      width="105"
+      height="28"
+      fill="#ffffff"
+      fill-opacity="0.90"
+      stroke="#000000"
+      stroke-width="1"/>
 
-    circle.setAttribute("cx", q.x);
-
-    circle.setAttribute("cy", q.y);
-
-    circle.setAttribute("r", 6);
-
-    circle.setAttribute("fill", "#000");
-
-    svg.appendChild(circle);
-
-
-    const texto = document.createElementNS(
-        "http://www.w3.org/2000/svg",
-        "text"
-    );
-
-    texto.setAttribute("x", q.x + 10);
-
-    texto.setAttribute("y", q.y - 8);
-
-    texto.setAttribute("font-size", "13");
-
-    texto.setAttribute("font-family", "Arial");
-
-    texto.setAttribute("font-weight", "900");
-
-    texto.textContent = "AC-V" + (index + 1);
-
-    svg.appendChild(texto);
-
-});
+<text x="547"
+      y="533"
+      font-size="12"
+      fill="#000000"
+      text-anchor="middle">
+    ÁREA COMÚN
+</text>
 
 
 /*
